@@ -1,0 +1,115 @@
+{% extends '__content__.html' %}
+
+{% block title %}{% if blog %}{{ blog.name }}{% endif %}{% endblock %}
+
+{% block script %}
+<script>
+
+var comment_url = '/api/blog/{{ blog.id }}/comment';
+
+$(function () {
+    $('#form-comment').submit(function (e) {
+        e.preventDefault();
+        showError();
+        var content = $('#form-comment textarea').val().trim();
+        if (content==='') {
+            return showError('请输入评论内容！');
+        }
+        startLoading();
+        postApi(comment_url, {content: content}, function (err, result) {
+            if (err) {
+                showError(err);
+                stopLoading();
+                return;
+            }
+            location.reload();
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+    {% if blog %}
+<article>
+    <h2>
+        {{ blog.name }}
+    </h2>
+    <div class="row">
+        <div class="group1 col-sm-6 col-md-6">
+            分类：
+            <a href="javascript:go_category('{{ blog.category }}')">{{ blog.category }}</a>
+            | 标签：{{ blog.tags }}
+        </div>
+        <div class="group2 col-sm-6 col-md-6">{{ blog.created_at|datetime }} | 阅读：<span class="badge">{{ blog.read_count }}</span></div>
+    </div>
+    <hr>
+    <p>{{ blog.html_content|safe }}</p>
+    <hr></article>
+{% else %}
+<article>
+    <h2>
+        <a href="#">测试博客文章 - April 19</a>
+    </h2>
+    <div class="row">
+        <div class="group1 col-sm-6 col-md-6">
+            分类：
+            <a href="#">Signs</a>
+            | 标签：
+            <a href="#">Aries</a>
+            ,
+            <a href="#">Fire</a>
+            ,
+            <a href="#">Mars</a>
+        </div>
+        <div class="group2 col-sm-6 col-md-6">2014-11-17 15:14 | 阅读：20</div>
+    </div>
+    <hr>
+    <img src="http://placehold.it/900x300" class="img-responsive">
+    <br/>
+    <p class="lead"></p>
+    <p>测试文件内容</p>
+    <hr></article>
+{% endif %}
+<ul class="pager">
+    <li class="previous">
+        <a href="/">&larr; 返回</a>
+    </li>
+</ul>
+<h4>评论</h4>
+<div class="well well-sm">
+    {% if not user %}
+    <p class="text-center">请登录后发表评论...</p>
+    {% else %}
+    <form id="form-comment" role="form" class="clearfix">
+        <div class="col-md-12 form-group">
+            <label for="comment">{{ user.name }}</label>
+            <div class="alert alert-danger hidden" role="alert">...</div>
+            <textarea class="form-control" id="comment" placeholder="说点什么吧..."></textarea>
+        </div>
+        <div class="col-md-12 form-group text-right">
+            <button type="submit" class="btn btn-primary">发布</button>
+        </div>
+    </form>
+    {% endif %}
+</div>
+<ul id="comments" class="comments">
+    {% if comments %}
+    {% for comment in comments %}
+    <li class="comment">
+        <div class="clearfix">
+            <h4 class="pull-left">
+                {{ comment.user_name }} {% if comment.user_id==blog.user_id %}(作者){% endif %}
+            </h4>
+            <span class="pull-right align-bottom">{{ comment.created_at|datetime }}</span>
+        </div>
+        <p>{{ comment.content }}</p>
+    </li>
+    {% endfor %}
+{% else %}
+    <li class="comment">
+        <p class="text-center">还没有评论，沙发等你来抢</p>
+    </li>
+    {% endif %}
+</ul>
+{% endblock %}

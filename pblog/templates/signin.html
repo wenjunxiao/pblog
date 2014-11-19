@@ -1,0 +1,59 @@
+{% extends '__base__.html' %}
+{% block title %} 登录 {% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+
+$(function(){
+    var vm = new Vue({
+        el: '#form-signin',
+        data: {
+            email: '',
+            password: '',
+            remember: false
+        },
+        methods: {
+            submit: function(event) {
+                event.preventDefault();
+                var email = this.email.trim().toLowerCase()
+                showError()
+                startLoading()
+                postApi('/api/authenticate', {
+                    email: email,
+                    password: CryptoJS.MD5(this.password).toString(),
+                    remember: this.remember
+                }, function (err, result) {
+                    if(err){
+                        showError(err);
+                    } else {
+                        return location.assign(result.admin ? '/manage/' : '/')
+                    }
+                    stopLoading()
+                });
+            }
+        }
+    });
+})
+</script>
+{% endblock %}
+
+{% block body %}
+    <div class="vertical-align-middle">
+        <form id="form-signin" v-on="submit: submit" class="panel panel-default" role="form">
+            <div class="alert alert-danger hidden" role="alert">...</div>
+            <div class="form-group">
+                <label class="sr-only" for="email">电子邮件</label>
+                <input type="email" class="form-control" id="email" v-model="email" placeholder="电子邮件" required></div>
+            <div class="form-group">
+                <label class="sr-only" for="password">口令</label>
+                <input type="password" class="form-control" id="password" v-model="password" placeholder="口令" required></div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-lg btn-primary btn-block">登录</button>
+            </div>
+            <div class="checkbox">
+                <label class="small-text">
+                    <input type="checkbox" v-model="remember" name="remember">记住我</label>
+            </div>
+        </form>
+    </div>
+{% endblock %}

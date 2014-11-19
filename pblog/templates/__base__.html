@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="blog template">
+    <meta name="author" content="Wenjun Xiao">
+    {% block meta %}
+    <!-- block meta  -->
+    {% endblock %}
+    <title>{% block title %} ? {% endblock %} - 肖稳军的官方网站</title>
+
+    <!-- Bootstrap CSS file-->
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap-3.0.3/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="/static/bootstrap-3.0.3/css/bootstrap-theme.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap-3.0.3/css/font-awesome.min.css" />
+
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap-3.0.3/css/pblog.css">
+    {% block css %}<!-- css  -->{% endblock %}
+    <!-- Jquery and Bootstrap Script files -->
+    <script type="text/javascript" src="/static/bootstrap-3.0.3/js/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-3.0.3/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-3.0.3/js/vue.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-3.0.3/js/pblog.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-3.0.3/js/md5.js"></script>
+    {% block script %}<!-- script  -->{% endblock %}
+</head>
+<body>
+    {% block header %}
+    {% endblock %}
+    <div class="wrapper">
+        {% block body %}
+        {% endblock %}
+        <div class="push"></div>
+    </div>
+    <footer class="footer">
+        <hr/>
+        <div class="container">
+            <p class="text-center">Copyright © WenjunXiao 2014. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

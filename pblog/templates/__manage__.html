@@ -1,0 +1,120 @@
+{% extends '__base__.html' %}
+
+{% block title %} 后台管理 {% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="page-header">
+        <h1>
+            博客后台管理系统
+            <small>Welcome!</small>
+        </h1>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3 col-md-3">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    内容管理
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <span class="glyphicon glyphicon-pencil text-primary"></span>
+                                    <a>博客</a>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <span class="glyphicon glyphicon-minus text-primary"></span>
+                                            <a href="/manage/blogs">文章管理</a>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="glyphicon glyphicon-minus text-primary"></span>
+                                            <a href="/manage/comments">评论管理</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="glyphicon glyphicon-edit text-success"></span>
+                                    <a href="/manage/users">用户管理</a>
+                                </li>
+                                <!-- <li class="list-group-item">
+                                <span class="glyphicon glyphicon-edit text-success"></span>
+                                <a>Contact us</a>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-share-alt text-info"></span>
+                                <a>Share</a>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-bell text-success"></span>
+                                <a>Users online</a>
+                                <span class="badge">7</span>
+                            </li>
+                            -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9 col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{% block menupath %}Menu Information{% endblock %}</h3>
+                </div>
+                <div class="panel-body">
+                    {% block content %}
+                    <div class="alert alert-success">管理博客内容</div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+#accordion .glyphicon {
+    margin-right: 10px;
+}
+.panel-collapse > .list-group .list-group-item:first-child {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+.panel-collapse > .list-group .list-group-item {
+    border-width: 1px 0;
+}
+.panel-collapse > .list-group {
+    margin-bottom: 0;
+}
+.panel-collapse .list-group-item {
+    border-radius: 0;
+}
+.panel-collapse .list-group .list-group {
+    margin: 0;
+    margin-top: 10px;
+}
+.panel-collapse .list-group-item li.list-group-item {
+    margin: 0 -15px;
+    border-top: 1px solid #ddd;
+    border-bottom: 0;
+    padding-left: 30px;
+}
+.panel-collapse .list-group-item li.list-group-item:last-child {
+    padding-bottom: 0;
+}
+.panel-collapse div.list-group div.list-group {
+    margin: 0;
+}
+.panel-collapse div.list-group .list-group a.list-group-item {
+    border-top: 1px solid #ddd;
+    border-bottom: 0;
+    padding-left: 30px;
+}
+</style>
+</div>
+{% endblock %}

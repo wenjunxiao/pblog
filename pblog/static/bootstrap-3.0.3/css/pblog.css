@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+}
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    font-size: 14px;
+    line-height: 20px;
+    color: #333333;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.container {
+    max-width: 1024px;
+}
+@media (min-width: 768px) { /* tablets and up */ 
+    .group2 {
+        text-align: right;
+    }
+}
+footer {
+    margin: 10px 0;
+}
+.bs-sidebar {
+    display: block;
+}
+.under_line {
+    border-bottom: 1px solid #e8e8e8;
+    padding-bottom: 5px;
+}
+#comments, #comments li {
+    margin: 0;
+    padding: 0;
+}
+#comments li {
+    list-style: none;
+    border-top: 1px solid #e8e8e8;
+}
+#comments .align-bottom{
+    margin: 10px 0;
+}
+.wrapper {
+    min-height: 95%;
+    height: auto !important;
+    height: 95%;
+    margin: 0 auto -45px;
+}
+.footer, .push {
+    height: 45px;
+    clear: both;
+}
+.form-control-text {
+    height: 28px;
+    padding-top: 6px;
+}
+#form-signin {
+    padding: 15px 15px 0px 15px;
+}
+.small-text{
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+}
+.vertical-align-middle {
+    width: 320px;
+    vertical-align: middle;
+    max-width: 320px;
+    margin: 0 auto;
+    padding-top: 12%;
+    height: 100%;
+}
+.login-user img {
+    width: 32px;
+    height: 32px;
+    float: left;
+    margin-top: -6px;
+    margin-right: 4px;
+}

@@ -1,0 +1,102 @@
+{% extends '__main__.html' %}
+
+{% block body %}
+<script type="text/javascript">
+function initVue(data) {
+    var vm = new Vue({
+        el: '#widget',
+        data: {
+            tops: data.blogs,
+            categories: data.categories,
+            latests: data.comments
+        },
+        methods: {
+            isEmpty: function(obj){
+                for(var attr in obj){
+                    return false
+                }
+                return true
+            },
+            go_category:function(category){
+                location.assign(encodeURI(encodeURI('/category/' + category.category)))
+            },
+            encode: function(s){
+                return encodeURI(encodeURI(s))
+            }
+        }
+    });
+}
+$(function () {
+    startLoading();
+    getApi('/api/?blogs/top/10&categories&comments/top/10', 
+        function (err, data) {
+            if (err) {
+                showError(err);
+            } else {
+                stopLoading();
+                initVue(data);
+            }
+        }
+    );
+});
+</script>
+<div class="bs-header">
+    <div class="container">
+        <h1>肖稳军的官方网站</h1>
+        <p>关注于Python、Java、linux和互联网</p>
+    </div>
+    <hr>
+</div>
+<div id="body" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <div class="col-md-4" id="widget">
+            <div class="bs-sidebar">
+                <h4 class="under_line">热门文章</h4>
+                <ul class="list-group" v-if="! isEmpty(tops)">
+                    <li class="list-group-item" v-repeat="top: tops">
+                        <a v-attr="href: '/blog/'+ top.id"  v-text="top.name"></a>
+                    </li>
+                </ul>
+                <p class="text-center" v-if="isEmpty(tops)">还没有文章，赶紧写一篇吧</p>
+            </div>
+            <div class="bs-sidebar">
+                <h4 class="under_line">文章分类</h4>
+                <ul class="list-group" v-if="! isEmpty(categories)">
+                    <li class="list-group-item" v-repeat="category: categories">
+                        <!-- <a href="javascript:void(0)" v-on="click: go_category(category)" v-text="category.category+'('+ category.blog_count + ')'"></a> -->
+                        <a v-attr="href: '/category/'+ encode(category.category)"  v-text="category.category+'('+ category.blog_count + ')'"></a>
+                    </li>
+                </ul>
+                <p class="text-center" v-if="isEmpty(categories)">还没有分类，赶紧把文章分类吧</p>
+            </div>
+            <div class="bs-sidebar">
+                <h4  class="under_line">最新评论</h4>
+                <ul class="list-group" v-if="! isEmpty(latests)">
+                    <li class="list-group-item" v-repeat="lastest: latests">
+                        <a v-if="lastest.blog_url" v-attr="href: lastest.blog_url">
+                            {{"{{lastest.content}}"}}  <em v-text="lastest.user_name"></em>
+                        </a>
+                        <a v-if="! lastest.blog_url" v-attr="href: '/blog/'+ lastest.blog_id">
+                            {{"{{lastest.content}}"}}  <em v-text="lastest.user_name"></em>
+                        </a>
+                    </li>
+                </ul>
+                <p class="text-center" v-if="isEmpty(latests)">还没有评论，沙发等你来抢</p>
+            </div>
+            <div class="bs-sidebar">
+                <h4 class="under_line">关于博主</h4>
+                <iframe width="100%" height="auto" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=auto&fansRow=2&ptype=1&speed=0&skin=1&isTitle=0&noborder=0&isWeibo=0&isFans=1&uid=2017670880&verifier=5f359d0c&dpc=1"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+    <style>
+.bs-sidebar > .list-group .list-group-item {
+    border-style: none;
+}
+</style>
+{% endblock %}

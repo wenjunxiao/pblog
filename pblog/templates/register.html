@@ -1,0 +1,85 @@
+{% extends '__main__.html' %}
+
+{% block title%}注册{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+$(function(){
+    var vm = new Vue({
+        el: '#form-register',
+        data: {
+            name: '',
+            email: '',
+            password: ''
+        },
+        methods: {
+            submit: function(event) {
+                event.preventDefault();
+                if (! this.name.trim()) {
+                    return showError('请输入名字');
+                }
+                if (! validateEmail(this.email.trim().toLowerCase())) {
+                    return showError('请输入正确的Email地址');
+                }
+                if (this.password.length < 6) {
+                    return showError('口令长度至少为6个字符');
+                }
+                if (this.password !== this.repasswd) {
+                    return showError('两次输入的口令不一致');
+                }
+                showError()
+                startLoading()
+                postApi('/api/register', {
+                    name: this.name,
+                    email: this.email.trim().toLowerCase(),
+                    password: CryptoJS.MD5(this.password).toString(),
+                }, function (err, result) {
+                    if(err){
+                        showError(err);
+                    } else {
+                        return location.assign('/')
+                    }
+                    stopLoading()
+                });
+            }
+        }
+    });
+})
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>欢迎注册！</h1>
+    <div class="register-form">
+        <form id="form-register" v-on="submit: submit" class="form-horizontal col-md-8" role="form">
+            <div class="alert alert-danger hidden" role="alert">...</div>
+            <div class="form-group">
+                <label for="name" class="col-md-2 form-control-text">姓名</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" id="name" v-model="name" placeholder="姓名" required></div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-md-2 form-control-text">电子邮件</label>
+                <div class="col-md-10">
+                    <input type="email" class="form-control" id="email" v-model="email" placeholder="电子邮件" required></div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="col-md-2 form-control-text">输入口令</label>
+                <div class="col-md-10">
+                    <input type="password" class="form-control" id="password" v-model="password" placeholder="输入口令" required></div>
+            </div>
+            <div class="form-group">
+                <label for="repasswd" class="col-md-2 form-control-text">重复口令</label>
+                <div class="col-md-10">
+                    <input type="password" class="form-control" id="repasswd" v-model="repasswd" placeholder="重复口令" required></div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12 text-right">
+                    <button type="submit" class="btn btn-lg btn-primary"> 注 册 </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

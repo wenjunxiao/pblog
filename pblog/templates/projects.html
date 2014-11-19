@@ -1,0 +1,82 @@
+{% extends '__content__.html' %}
+
+{% block title %}开源项目{% endblock %}
+
+{% block script %}
+<script>
+
+var comment_url = '/api/blog/{{ blog_id }}/comment';
+
+$(function () {
+    $('#form-comment').submit(function (e) {
+        e.preventDefault();
+        showError();
+        var content = $('#form-comment textarea').val().trim();
+        if (content==='') {
+            return showError('请输入评论内容！');
+        }
+        startLoading();
+        postApi(comment_url, {content: content}, function (err, result) {
+            if (err) {
+                showError(err);
+                stopLoading();
+                return;
+            }
+            location.reload();
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<article>
+    <h2>开源项目</h2>
+    <hr>
+    <p class="head">以下是开发的开源项目，项目源码在<a href="https://github.com/wenjunxiao" target="_blank">Github</a>上:</p>
+    <p>
+        <div class="panel panel-success">
+            <div class="panel-heading">
+            <h3 class="panel-title"><a href="https://github.com/wenjunxiao/pblog" target="_blank">pblog</a></h3>
+            </div>
+            <div class="panel-body">本博客的源码，是学习Python时开发的，后台实现没有基于框架（学习参考过其他框架），前端用到Bootstrap 3.03、JQuery、Vue.js，还学习参考了网上的不少学习资料和教程。</div>
+        </div>
+    </p>
+    <hr></article>
+<h4>评论</h4>
+<div class="well well-sm">
+    {% if not user %}
+    <p class="text-center">请登录后发表评论...</p>
+    {% else %}
+    <form id="form-comment" role="form" class="clearfix">
+        <div class="col-md-12 form-group">
+            <label for="comment">{{ user.name }}</label>
+            <div class="alert alert-danger hidden" role="alert">...</div>
+            <textarea class="form-control" id="comment" placeholder="说点什么吧..."></textarea>
+        </div>
+        <div class="col-md-12 form-group text-right">
+            <button type="submit" class="btn btn-primary">发布</button>
+        </div>
+    </form>
+    {% endif %}
+</div>
+<ul id="comments" class="comments">
+    {% if comments %}
+    {% for comment in comments %}
+    <li class="comment">
+        <div class="clearfix">
+            <h4 class="pull-left">
+                {{ comment.user_name }}
+            </h4>
+            <span class="pull-right align-bottom">{{ comment.created_at|datetime }}</span>
+        </div>
+        <p>{{ comment.content }}</p>
+    </li>
+    {% endfor %}
+{% else %}
+    <li class="comment">
+        <p class="text-center">还没有评论，沙发等你来抢</p>
+    </li>
+    {% endif %}
+</ul>
+{% endblock %}

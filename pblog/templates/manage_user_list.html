@@ -1,0 +1,88 @@
+{% extends '__manage__.html' %}
+
+{% block menupath %} 用户管理 {% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+
+function initVM(data) {
+    $('#div-users').show();
+    var vm = new Vue({
+        el: '#div-users',
+        data: {
+            users: data.users,
+            page: data.page
+        },
+        methods: {
+            previous: function () {
+                gotoPage(this.page.page_index - 1);
+            },
+            next: function () {
+                gotoPage(this.page.page_index + 1);
+            }
+        }
+    });
+}
+
+$(function() {
+    getApi('/api/users?page={{ page_index }}', function (err, results) {
+        if (err) {
+            return showError(err);
+        }
+        initVM(results);
+    });
+});
+
+</script>
+{% endblock %}
+
+{% block content %}
+<style type="text/css">
+    .show_red{
+        background-color: red;
+    }
+    .show_normal{
+        background-color: black;
+    }
+</style>
+<div id="div-users">
+    <div class="alert alert-danger hidden" role="alert">...</div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>名字</th>
+                <th>电子邮件</th>
+                <th>注册时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-repeat="user: users">
+                <td>
+                    <span v-text="user.name"></span>
+                    <span v-if="user.admin" style="color:#d05">(管理员)</span>
+                </td>
+                <td>
+                    <a v-attr="href: 'mailto:'+user.email" v-text="user.email"></a>
+                </td>
+                <td>
+                    <span v-text="user.created_at.toDateTime()"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <nav>
+        <ul class="pagination">
+            <li v-if="page.has_previous" class="previous">
+                <a v-attr="href:'?page=' + (page.page_index - 1)">&larr; 上一页</a>
+            </li>
+            <li v-repeat="page.page_count" v-class="active: ($index + 1) == page.page_index">
+                <span v-if="$index + 1 == page.page_index" v-text="$index + 1"></span>
+                <a v-if="($index + 1) != page.page_index" v-attr="href:'?page=' + ($index + 1)" v-text="$index + 1"></a>
+            </li>
+            <li v-if="page.has_next" class="next">
+                <a v-attr="href:'?page=' + (page.page_index + 1)">下一页 &rarr;</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends '__content__.html' %}
+
+{% block title %} 首页 {% endblock %}
+
+{% block content %}
+    {% if blogs %}
+        {% for blog in blogs %}
+<article>
+    <h2>
+        <a href="/blog/{{ blog.id }}">{{ blog.name }}</a>
+    </h2>
+    <div class="row">
+        <div class="group1 col-sm-6 col-md-6">
+            分类：
+            <a href="javascript:go_category('{{ blog.category }}')">{{ blog.category }}</a>
+            | 标签：{{ blog.tags }}
+        </div>
+        <div class="group2 col-sm-6 col-md-6">
+            {{ blog.created_at|datetime }} | 阅读：
+            <span class="badge">{{ blog.read_count }}</span>
+        </div>
+    </div>
+    <hr>
+    <p>{{ blog.summary }}</p>
+    <p class="text-right">
+        <a href="/blog/{{ blog.id }}" class="text-right">继续阅读...</a>
+    </p>
+    <hr></article>
+{% endfor %}
+{% endif %}
+    {% if page %}
+<nav>
+    <ul class="pagination">
+        {% if page.has_previous %}
+        <li class="previous">
+            <a href="?page={{ page.index - 1 }}">&larr; 上一页</a>
+        </li>
+        {% endif %}
+        {% for i in range(1, page.page_count + 1) %}
+            {% if i == page.page_index %}
+        <li class="active">
+            <span>{{ i }}</span>
+        </li>
+        {% else %}
+        <li class="active">
+            <a href="?page={{ i }}">{{ i }}</a>
+        </li>
+        {% endif %}
+        
+        {% endfor %}
+        {% if page.has_next %}
+        <li class="next">
+            <a href="?page={{ page.index + 1 }}">下一页 &rarr;</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
